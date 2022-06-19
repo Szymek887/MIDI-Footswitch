@@ -1,3 +1,4 @@
+// Include all libraries
 #include <Arduino.h>
 #include <MIDI.h>
 #include <Wire.h>
@@ -5,25 +6,30 @@
 #include <Adafruit_SSD1306.h>
 #include <Adafruit_I2CDevice.h>
 
+// Initialize OLED display
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels
-
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
 
+// Initialize MIDI
 MIDI_CREATE_DEFAULT_INSTANCE();
 
-String midiCommand = "CC";
-int preset = 10;
-String buttonMode = "DT";
-
+// Maximum time before long press in miliseconds
 const int SHORT_PRESS_TIME = 1000;
 
+// Variables for different modes
+String midiCommand = "CC";
+String buttonMode = "DT";
+int preset = 10;
+
+// Variables for defining if signal was sent
 bool control1Pressed = false;
 bool control2Pressed = false;
 bool control3Pressed = false;
 bool control4Pressed = false;
 bool control5Pressed = false;
 
+// Declaring buttons
 // Button 1 = Change MIDI command (PC, CC) 
 int button1Pin = 2;
 int button1StateOld;
@@ -96,7 +102,7 @@ void checkButtonState()
 }
 
 // Change info displayed on OLED
-void printInfoOnDisplay()
+void updateInfoOnDisplay()
 {
   display.clearDisplay();
   display.setCursor(0,0);
@@ -107,17 +113,20 @@ void printInfoOnDisplay()
   display.println(buttonMode);
 }
 
+// Initialization of Arduino
 void setup() {
-  // put your setup code here, to run once:
+  // Initialize serial connection
   Serial.begin(9600);
 
-  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3D for 128x64
+  // Initialize OLED display
+  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
     Serial.println(F("SSD1306 allocation failed"));
     for(;;);
   }
   delay(2000);
   display.clearDisplay();
 
+  // Initialize MIDI
   MIDI.begin(MIDI_CHANNEL_OFF);
 
   // Change pin modes
@@ -128,13 +137,6 @@ void setup() {
   pinMode(button5Pin, INPUT_PULLUP);
   pinMode(button6Pin, INPUT_PULLUP);
   pinMode(button7Pin, INPUT_PULLUP);
-  
-  // Testing display
-  display.setTextSize(4);
-  display.setTextColor(WHITE);
-  display.setCursor(0, 0);
-  // Display static text
-  display.display(); 
 }
 
 void loop() {
@@ -144,8 +146,6 @@ void loop() {
   // Check if MIDI command or button mode was changed
   if (button1StateNew == 0 && button1IsClicked == false)
   {
-    
-
     pressedTime = millis();
 
     button1IsClicked = true;
@@ -192,8 +192,10 @@ void loop() {
     button2IsClicked = false;
   }
 
+  // Send Control Change signals
   if (midiCommand == "CC")
   {
+    // Button 1
     if (button3StateNew == 0 && button3IsClicked == false)
     {
       if (control1Pressed == false)
@@ -217,6 +219,7 @@ void loop() {
       button3IsClicked = false;
     }
 
+    // Button 2
     if (button4StateNew == 0 && button4IsClicked == false)
     {
       if (control2Pressed == false)
@@ -240,8 +243,11 @@ void loop() {
       button4IsClicked = false;
     }
 
-  } else if (midiCommand == "PC")
+  } 
+  // Send Program change signals
+  else if (midiCommand == "PC")
   {
+    // Button 1, PC 0
     if (button3StateNew == 0 && button3IsClicked == false)
     {
       MIDI.sendProgramChange(0,defaultChannel);
@@ -252,6 +258,7 @@ void loop() {
       button3IsClicked = false;
     }
     
+    // Button 2, PC 1
     if (button4StateNew == 0 && button4IsClicked == false)
     {
       MIDI.sendProgramChange(1,defaultChannel);
@@ -264,7 +271,7 @@ void loop() {
   }
 
   // Update display values
-  printInfoOnDisplay();
+  updateInfoOnDisplay();
   display.display();
   delay(5);
 }
