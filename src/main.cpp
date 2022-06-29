@@ -243,7 +243,79 @@ void loop() {
       button4IsClicked = false;
     }
 
+    // Button 3
+    if (button5StateNew == 0 && button5IsClicked == false)
+    {
+      if (control3Pressed == false)
+      {
+        MIDI.sendControlChange(3 + (preset / 2),127,defaultChannel);
+        control3Pressed = true;
+      } else if (control3Pressed == true && buttonMode == "DT")
+      {
+        MIDI.sendControlChange(3 + (preset / 2),0,defaultChannel);
+        control3Pressed = false;
+      }
+
+      button5IsClicked = true;
+    } else if (button5StateNew == 1)
+    {
+      if (buttonMode == "ST" && control3Pressed == true)
+      {
+        MIDI.sendControlChange(3 + (preset / 2),0,defaultChannel);
+        control3Pressed = false;
+      }
+      button5IsClicked = false;
+    }
+
+    // Button 4
+    if (button6StateNew == 0 && button6IsClicked == false)
+    {
+      if (control4Pressed == false)
+      {
+        MIDI.sendControlChange(4 + (preset / 2),127,defaultChannel);
+        control4Pressed = true;
+      } else if (control4Pressed == true && buttonMode == "DT")
+      {
+        MIDI.sendControlChange(4 + (preset / 2),0,defaultChannel);
+        control4Pressed = false;
+      }
+
+      button6IsClicked = true;
+    } else if (button6StateNew == 1)
+    {
+      if (buttonMode == "ST" && control4Pressed == true)
+      {
+        MIDI.sendControlChange(4 + (preset / 2),0,defaultChannel);
+        control4Pressed = false;
+      }
+      button6IsClicked = false;
+    }
+
+    // Button 5
+    if (button7StateNew == 0 && button7IsClicked == false)
+    {
+      if (control5Pressed == false)
+      {
+        MIDI.sendControlChange(5 + (preset / 2),127,defaultChannel);
+        control5Pressed = true;
+      } else if (control5Pressed == true && buttonMode == "DT")
+      {
+        MIDI.sendControlChange(5 + (preset / 2),0,defaultChannel);
+        control5Pressed = false;
+      }
+
+      button7IsClicked = true;
+    } else if (button7StateNew == 1)
+    {
+      if (buttonMode == "ST" && control5Pressed == true)
+      {
+        MIDI.sendControlChange(5 + (preset / 2),0,defaultChannel);
+        control5Pressed = false;
+      }
+      button7IsClicked = false;
+    }
   } 
+
   // Send Program change signals
   else if (midiCommand == "PC")
   {
