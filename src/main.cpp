@@ -268,6 +268,39 @@ void loop() {
     {
       button4IsClicked = false;
     }
+
+    // Button 3, PC 2
+    if (button5StateNew == 0 && button5IsClicked == false)
+    {
+      MIDI.sendProgramChange(2,defaultChannel);
+
+      button5IsClicked = true;
+    } else if (button5StateNew == 1)
+    {
+      button5IsClicked = false;
+    }
+
+    // Button 4, PC 3
+    if (button6StateNew == 0 && button6IsClicked == false)
+    {
+      MIDI.sendProgramChange(3,defaultChannel);
+
+      button6IsClicked = true;
+    } else if (button6StateNew == 1)
+    {
+      button6IsClicked = false;
+    }
+
+    // Button 5, PC 4
+    if (button7StateNew == 0 && button7IsClicked == false)
+    {
+      MIDI.sendProgramChange(4,defaultChannel);
+
+      button7IsClicked = true;
+    } else if (button7StateNew == 1)
+    {
+      button7IsClicked = false;
+    }
   }
 
   // Update display values
