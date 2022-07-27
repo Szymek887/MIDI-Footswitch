@@ -119,7 +119,7 @@ void setup() {
   Serial.begin(9600);
 
   // Initialize OLED display
-  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3D for 128x64
     Serial.println(F("SSD1306 allocation failed"));
     for(;;);
   }
@@ -137,6 +137,11 @@ void setup() {
   pinMode(button5Pin, INPUT_PULLUP);
   pinMode(button6Pin, INPUT_PULLUP);
   pinMode(button7Pin, INPUT_PULLUP);
+    
+  // Setting display properties
+  display.setTextSize(4);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 0);
 }
 
 void loop() {
