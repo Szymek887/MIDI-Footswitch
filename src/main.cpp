@@ -115,9 +115,6 @@ void updateInfoOnDisplay()
 
 // Initialization of Arduino
 void setup() {
-  // Initialize serial connection
-  Serial.begin(9600);
-
   // Initialize OLED display
   if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3D for 128x64
     Serial.println(F("SSD1306 allocation failed"));
@@ -142,6 +139,8 @@ void setup() {
   display.setTextSize(4);
   display.setTextColor(WHITE);
   display.setCursor(0, 0);
+
+  Serial.begin(9600);
 }
 
 void loop() {
