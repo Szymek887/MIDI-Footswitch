@@ -19,7 +19,7 @@ const int SHORT_PRESS_TIME = 1000;
 
 // Variables for different modes
 String midiCommand = "CC";
-String buttonMode = "DT";
+String buttonMode = "ST";
 int preset = 10;
 
 // Variables for defining if signal was sent
