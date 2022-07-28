@@ -29,15 +29,27 @@ bool control3Pressed = false;
 bool control4Pressed = false;
 bool control5Pressed = false;
 
+// Declaring potentiometer
+int potPin = A3;
+int potValue = 0;
+int newPotValue = 0;
+
+// Declaring time variables
+// Potentiometer time
+unsigned long potTime = 0;
+const int potDisplayTime = 2000;
+
+// Button time
+unsigned long pressedTime = 0;
+unsigned long releasedTime = 0;
+long pressDuration = 0;
+
 // Declaring buttons
 // Button 1 = Change MIDI command (PC, CC) 
 int button1Pin = 2;
 int button1StateOld;
 int button1StateNew;
 bool button1IsClicked = false;
-unsigned long pressedTime = 0;
-unsigned long releasedTime = 0;
-long pressDuration = 0;
 
 // Button 2 = Change mode (SPST, DPDT)
 int button2Pin = 3;
@@ -90,8 +102,9 @@ void oledDisplayCenter(String text)
 }
 
 // Check state of every button
-void checkButtonState()
+void checkInputsStates()
 {
+  newPotValue = analogRead(A3) / 8;
   button1StateNew = digitalRead(button1Pin);
   button2StateNew = digitalRead(button2Pin);
   button3StateNew = digitalRead(button3Pin);
@@ -111,6 +124,14 @@ void updateInfoOnDisplay()
   display.print(preset / 10);
   display.print(" ");
   display.println(buttonMode);
+}
+
+void displayPotInfo() {
+  display.clearDisplay();
+  display.setCursor(0,0);
+  display.println("Pot:");
+  display.print(map(potValue, 0, 127, 0, 100));
+  display.println("%");
 }
 
 // Initialization of Arduino
@@ -145,7 +166,7 @@ void setup() {
 
 void loop() {
   // Update button states
-  checkButtonState();
+  checkInputsStates();
 
   // Check if MIDI command or button mode was changed
   if (button1StateNew == 0 && button1IsClicked == false)
@@ -379,8 +400,19 @@ void loop() {
     }
   }
 
+  // Potentiometer logic
+  if (newPotValue != potValue) {
+    potValue = newPotValue;
+    potTime = millis();
+    MIDI.sendControlChange(7, potValue, defaultChannel);
+    displayPotInfo();
+  }
+
+  if (millis() - potTime > potDisplayTime) {
+    updateInfoOnDisplay();
+  }
+
   // Update display values
-  updateInfoOnDisplay();
   display.display();
   delay(5);
 }
