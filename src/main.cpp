@@ -45,7 +45,7 @@ unsigned long releasedTime = 0;
 long pressDuration = 0;
 
 // Declaring buttons
-// Button 1 = Change MIDI command (PC, CC) 
+// Button 1 = Change MIDI command (PC, CC)
 int button1Pin = 2;
 int button1StateOld;
 int button1StateNew;
@@ -118,7 +118,7 @@ void checkInputsStates()
 void updateInfoOnDisplay()
 {
   display.clearDisplay();
-  display.setCursor(0,0);
+  display.setCursor(0, 0);
   oledDisplayCenter(midiCommand);
   display.print("P");
   display.print(preset / 10);
@@ -126,23 +126,27 @@ void updateInfoOnDisplay()
   display.println(buttonMode);
 }
 
-void displayPotInfo() {
+void displayPotInfo()
+{
   display.clearDisplay();
-  display.setCursor(0,0);
+  display.setCursor(0, 0);
   display.println("Pot:");
   display.print(map(potValue, 0, 127, 0, 100));
   display.println("%");
 }
 
 // Initialization of Arduino
-void setup() {
+void setup()
+{
   // Initialize Serial connection
   Serial.begin(9600);
-  
+
   // Initialize OLED display
-  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3D for 128x64
+  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C))
+  { // Address 0x3D for 128x64
     Serial.println(F("SSD1306 allocation failed"));
-    for(;;);
+    for (;;)
+      ;
   }
   delay(2000);
   display.clearDisplay();
@@ -158,14 +162,15 @@ void setup() {
   pinMode(button5Pin, INPUT_PULLUP);
   pinMode(button6Pin, INPUT_PULLUP);
   pinMode(button7Pin, INPUT_PULLUP);
-    
-  // Setting display properties
+
+  // Set default display properties
   display.setTextSize(4);
   display.setTextColor(WHITE);
   display.setCursor(0, 0);
 }
 
-void loop() {
+void loop()
+{
   // Update button states
   checkInputsStates();
 
@@ -173,34 +178,34 @@ void loop() {
   if (button1StateNew == 0 && button1IsClicked == false)
   {
     pressedTime = millis();
-
     button1IsClicked = true;
-  } else if (button1StateNew == 1 && button1IsClicked == true)
+  }
+  else if (button1StateNew == 1 && button1IsClicked == true)
   {
     releasedTime = millis();
-
     pressDuration = releasedTime - pressedTime;
-
     if (pressDuration < SHORT_PRESS_TIME)
     {
       if (midiCommand == "CC")
       {
         midiCommand = "PC";
-      } else
+      }
+      else
       {
         midiCommand = "CC";
       }
-    } else
+    }
+    else
     {
       if (buttonMode == "DT")
       {
         buttonMode = "ST";
-      } else
+      }
+      else
       {
         buttonMode = "DT";
       }
     }
-
     button1IsClicked = false;
   }
 
@@ -213,7 +218,8 @@ void loop() {
       preset = 10;
     }
     button2IsClicked = true;
-  } else if (button2StateNew == 1)
+  }
+  else if (button2StateNew == 1)
   {
     button2IsClicked = false;
   }
@@ -226,20 +232,22 @@ void loop() {
     {
       if (control1Pressed == false)
       {
-        MIDI.sendControlChange(1 + (preset / 2),127,defaultChannel);
+        MIDI.sendControlChange(1 + (preset / 2), 127, defaultChannel);
         control1Pressed = true;
-      } else if (control1Pressed == true && buttonMode == "DT")
+      }
+      else if (control1Pressed == true && buttonMode == "DT")
       {
-        MIDI.sendControlChange(1 + (preset / 2),0,defaultChannel);
+        MIDI.sendControlChange(1 + (preset / 2), 0, defaultChannel);
         control1Pressed = false;
       }
 
       button3IsClicked = true;
-    } else if (button3StateNew == 1)
+    }
+    else if (button3StateNew == 1)
     {
       if (buttonMode == "ST" && control1Pressed == true)
       {
-        MIDI.sendControlChange(1 + (preset / 2),0,defaultChannel);
+        MIDI.sendControlChange(1 + (preset / 2), 0, defaultChannel);
         control1Pressed = false;
       }
       button3IsClicked = false;
@@ -250,20 +258,22 @@ void loop() {
     {
       if (control2Pressed == false)
       {
-        MIDI.sendControlChange(2 + (preset / 2),127,defaultChannel);
+        MIDI.sendControlChange(2 + (preset / 2), 127, defaultChannel);
         control2Pressed = true;
-      } else if (control2Pressed == true && buttonMode == "DT")
+      }
+      else if (control2Pressed == true && buttonMode == "DT")
       {
-        MIDI.sendControlChange(2 + (preset / 2),0,defaultChannel);
+        MIDI.sendControlChange(2 + (preset / 2), 0, defaultChannel);
         control2Pressed = false;
       }
 
       button4IsClicked = true;
-    } else if (button4StateNew == 1)
+    }
+    else if (button4StateNew == 1)
     {
       if (buttonMode == "ST" && control2Pressed == true)
       {
-        MIDI.sendControlChange(2 + (preset / 2),0,defaultChannel);
+        MIDI.sendControlChange(2 + (preset / 2), 0, defaultChannel);
         control2Pressed = false;
       }
       button4IsClicked = false;
@@ -274,20 +284,22 @@ void loop() {
     {
       if (control3Pressed == false)
       {
-        MIDI.sendControlChange(3 + (preset / 2),127,defaultChannel);
+        MIDI.sendControlChange(3 + (preset / 2), 127, defaultChannel);
         control3Pressed = true;
-      } else if (control3Pressed == true && buttonMode == "DT")
+      }
+      else if (control3Pressed == true && buttonMode == "DT")
       {
-        MIDI.sendControlChange(3 + (preset / 2),0,defaultChannel);
+        MIDI.sendControlChange(3 + (preset / 2), 0, defaultChannel);
         control3Pressed = false;
       }
 
       button5IsClicked = true;
-    } else if (button5StateNew == 1)
+    }
+    else if (button5StateNew == 1)
     {
       if (buttonMode == "ST" && control3Pressed == true)
       {
-        MIDI.sendControlChange(3 + (preset / 2),0,defaultChannel);
+        MIDI.sendControlChange(3 + (preset / 2), 0, defaultChannel);
         control3Pressed = false;
       }
       button5IsClicked = false;
@@ -298,20 +310,22 @@ void loop() {
     {
       if (control4Pressed == false)
       {
-        MIDI.sendControlChange(4 + (preset / 2),127,defaultChannel);
+        MIDI.sendControlChange(4 + (preset / 2), 127, defaultChannel);
         control4Pressed = true;
-      } else if (control4Pressed == true && buttonMode == "DT")
+      }
+      else if (control4Pressed == true && buttonMode == "DT")
       {
-        MIDI.sendControlChange(4 + (preset / 2),0,defaultChannel);
+        MIDI.sendControlChange(4 + (preset / 2), 0, defaultChannel);
         control4Pressed = false;
       }
 
       button6IsClicked = true;
-    } else if (button6StateNew == 1)
+    }
+    else if (button6StateNew == 1)
     {
       if (buttonMode == "ST" && control4Pressed == true)
       {
-        MIDI.sendControlChange(4 + (preset / 2),0,defaultChannel);
+        MIDI.sendControlChange(4 + (preset / 2), 0, defaultChannel);
         control4Pressed = false;
       }
       button6IsClicked = false;
@@ -322,25 +336,27 @@ void loop() {
     {
       if (control5Pressed == false)
       {
-        MIDI.sendControlChange(5 + (preset / 2),127,defaultChannel);
+        MIDI.sendControlChange(5 + (preset / 2), 127, defaultChannel);
         control5Pressed = true;
-      } else if (control5Pressed == true && buttonMode == "DT")
+      }
+      else if (control5Pressed == true && buttonMode == "DT")
       {
-        MIDI.sendControlChange(5 + (preset / 2),0,defaultChannel);
+        MIDI.sendControlChange(5 + (preset / 2), 0, defaultChannel);
         control5Pressed = false;
       }
 
       button7IsClicked = true;
-    } else if (button7StateNew == 1)
+    }
+    else if (button7StateNew == 1)
     {
       if (buttonMode == "ST" && control5Pressed == true)
       {
-        MIDI.sendControlChange(5 + (preset / 2),0,defaultChannel);
+        MIDI.sendControlChange(5 + (preset / 2), 0, defaultChannel);
         control5Pressed = false;
       }
       button7IsClicked = false;
     }
-  } 
+  }
 
   // Send Program change signals
   else if (midiCommand == "PC")
@@ -348,21 +364,23 @@ void loop() {
     // Button 1, PC 0
     if (button3StateNew == 0 && button3IsClicked == false)
     {
-      MIDI.sendProgramChange(0,defaultChannel);
+      MIDI.sendProgramChange(0, defaultChannel);
 
       button3IsClicked = true;
-    } else if (button3StateNew == 1)
+    }
+    else if (button3StateNew == 1)
     {
       button3IsClicked = false;
     }
-    
+
     // Button 2, PC 1
     if (button4StateNew == 0 && button4IsClicked == false)
     {
-      MIDI.sendProgramChange(1,defaultChannel);
+      MIDI.sendProgramChange(1, defaultChannel);
 
       button4IsClicked = true;
-    } else if (button4StateNew == 1)
+    }
+    else if (button4StateNew == 1)
     {
       button4IsClicked = false;
     }
@@ -370,10 +388,11 @@ void loop() {
     // Button 3, PC 2
     if (button5StateNew == 0 && button5IsClicked == false)
     {
-      MIDI.sendProgramChange(2,defaultChannel);
+      MIDI.sendProgramChange(2, defaultChannel);
 
       button5IsClicked = true;
-    } else if (button5StateNew == 1)
+    }
+    else if (button5StateNew == 1)
     {
       button5IsClicked = false;
     }
@@ -381,10 +400,11 @@ void loop() {
     // Button 4, PC 3
     if (button6StateNew == 0 && button6IsClicked == false)
     {
-      MIDI.sendProgramChange(3,defaultChannel);
+      MIDI.sendProgramChange(3, defaultChannel);
 
       button6IsClicked = true;
-    } else if (button6StateNew == 1)
+    }
+    else if (button6StateNew == 1)
     {
       button6IsClicked = false;
     }
@@ -392,24 +412,27 @@ void loop() {
     // Button 5, PC 4
     if (button7StateNew == 0 && button7IsClicked == false)
     {
-      MIDI.sendProgramChange(4,defaultChannel);
+      MIDI.sendProgramChange(4, defaultChannel);
 
       button7IsClicked = true;
-    } else if (button7StateNew == 1)
+    }
+    else if (button7StateNew == 1)
     {
       button7IsClicked = false;
     }
   }
 
   // Potentiometer logic
-  if (newPotValue != potValue) {
+  if (newPotValue != potValue)
+  {
     potValue = newPotValue;
     potTime = millis();
     MIDI.sendControlChange(7, potValue, defaultChannel);
     displayPotInfo();
   }
 
-  if (millis() - potTime > potDisplayTime) {
+  if (millis() - potTime > potDisplayTime)
+  {
     updateInfoOnDisplay();
   }
 
